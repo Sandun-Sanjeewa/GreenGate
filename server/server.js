@@ -12,8 +12,13 @@ app.use(cors());
 if(process.env.NODE_ENV === "development"){
     app.use(morgan("dev"));
 }
+app.get("/", (req, res) => {
+  res.send("API running");
+});  
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>{
-    console.log(`Server running on ${process.env.NODE_ENV}  mode on port ${PORT}`);
+app.listen(PORT,"0.0.0.0",()=>{
+    console.log("Dynamic code updated at", new Date());
+    console.log("TEST BIND MOUNT");
+    console.log(`Server is running on ${process.env.NODE_ENV}  mode on port ${PORT}`);
 });
