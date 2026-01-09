@@ -2,43 +2,8 @@
 services:
  mongo:
   image: mongo:7
-  container_name: greengate-mongo
-  ports:
-   - "27017:27017"
   volumes:
    - mongo_data:/data/db
 
- server:
-  build: ./server
-  container_name: greengate-server
-  ports:
-   - "5000:5000"
-  environment:
-   - CHOKIDAR_USEPOLLING=true
-  env_file:
-   - .env
-  volumes: 
-   - ./server:/app
-   - server_node_modules:/app/node_modules
-  depends_on:
-   - mongo
-  command: npm run dev
-
- client:
-  build: ./Client
-  container_name: greengate-client
-  ports:
-   - "5173:5173"
-  environment:
-   - CHOKIDAR_USEPOLLING=true
-  volumes:
-   - ./Client:/app
-   - client_node_modules:/app/node_modules
-  depends_on:
-   - server
-  command: npm run dev
- 
 volumes:
  mongo_data:
- server_node_modules:
- client_node_modules:
