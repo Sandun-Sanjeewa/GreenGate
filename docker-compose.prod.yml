@@ -1,0 +1,59 @@
+services:
+
+ mongo: 
+  image: mongo:7
+  container_name: greengate-mongo
+  restart: always
+  volumes:
+   - mongo_data:/data/db
+  networks:
+   - greengate-network
+
+ server: 
+  build:
+   context: ./server
+   dockerfile: ../docker/prod/Dockerfile.server.prod
+  container_name: greengate-server
+  ports:
+   - "5000:5000"
+  env_file:
+   - .env.base
+   - .env.prod
+  restart: always
+  networks:
+   - greengate-network
+  depends_on:
+   - mongo
+
+
+ client:
+  build:
+   context: ./Client
+   dockerfile: ../docker/prod/Dockerfile.client.prod
+  container_name: greengate-client
+  restart: always
+  networks:
+   - greengate-network
+  depends_on:
+   - server
+
+ nginx: 
+  image: greengate-client
+  container_name: greengate-nginx
+  restart: always
+  ports:
+   - "80:80"
+  networks:
+   - greengate-network
+  depends_on:
+   - client
+   - server
+
+volumes:
+ mongo_data:
+
+networks:
+ greengate-network:
+  driver: bridge
+
+    
