@@ -1,0 +1,39 @@
+name: GreenGate CI
+
+on: 
+ push:
+  branches:
+   - main
+ pull_request:
+  branches:
+   - main
+
+jobs:
+ build:
+  runs-on: ubuntu-latest
+
+  steps:
+   - name: Checkout repository
+     uses: actions/checkout@v4
+
+   - name: Setup Node.js for Client
+     uses: actions/setup-node@v4
+     with:
+      node-version: 20
+
+   - name: Install Client dependencies
+     working-directory: ./Client
+     run: npm install
+   
+   - name: Build Client
+     working-directory: ./Client
+     run: npm run build
+
+   - name: Install Server dependencies
+     working-directory: ./server
+     run: npm install
+
+   - name: Build Server 
+     working-directory: ./server
+     run: | 
+      echo "Server build step"
