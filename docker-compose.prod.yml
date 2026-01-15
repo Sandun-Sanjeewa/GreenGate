@@ -10,9 +10,11 @@ services:
    - greengate-network
 
  server: 
-  build:
-   context: ./server
-   dockerfile: ../docker/prod/Dockerfile.server.prod
+  # build:
+  #  context: ./server
+  #  dockerfile: ../docker/prod/Dockerfile.server.prod
+  
+  image: sandunsanjeewa/greengate-server:latest
   container_name: greengate-server
   ports:
    - "5000:5000"
@@ -27,9 +29,11 @@ services:
 
 
  client:
-  build:
-   context: ./Client
-   dockerfile: ../docker/prod/Dockerfile.client.prod
+  # build:
+  #  context: ./Client
+  #  dockerfile: ../docker/prod/Dockerfile.client.prod
+
+  image: sandunsanjeewa/greengate-client:latest
   container_name: greengate-client
   restart: always
   networks:
@@ -38,7 +42,9 @@ services:
    - server
 
  nginx: 
-  image: greengate-client
+  #image: greengate-client
+  # image: nginx:alpine
+  image: sandunsanjeewa/greengate-nginx:latest
   container_name: greengate-nginx
   restart: always
   ports:
