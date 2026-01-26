@@ -76,3 +76,7 @@ jobs:
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
           EOF
+
+      - name: Test SSH
+        run: |
+         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "whoami"
