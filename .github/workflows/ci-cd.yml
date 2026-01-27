@@ -66,7 +66,7 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        scrit: |
+        script: |
          echo "Deploying GreenGate on EC2..."
          cd /home/ubuntu/greengate
          docker compose -f docker-compose.prod.yml pull
