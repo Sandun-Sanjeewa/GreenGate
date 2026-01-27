@@ -9,6 +9,12 @@ services:
   networks:
    - greengate-network
 
+  healthcheck:
+   test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+   interval: 10s
+   timeout: 5s
+   retries: 5
+
  server: 
   # build:
   #  context: ./server
@@ -25,7 +31,13 @@ services:
   networks:
    - greengate-network
   depends_on:
-   - mongo
+   mongo:
+    condition: service_healthy
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
 
  client:
@@ -39,7 +51,8 @@ services:
   networks:
    - greengate-network
   depends_on:
-   - server
+   server:
+    condition: service_healthy
 
  nginx: 
   #image: greengate-client
@@ -52,8 +65,10 @@ services:
   networks:
    - greengate-network
   depends_on:
-   - client
-   - server
+   client:
+    condition: service_started
+   server:
+    condition: service_healthy
 
 volumes:
  mongo_data:

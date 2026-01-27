@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build & Push Docker Images
     runs-on: ubuntu-latest
 
     steps:
@@ -54,27 +55,24 @@ jobs:
             sandunsanjeewa/greengate-nginx:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push'
+   name: Deploy to EC2
+   needs: build
+   runs-on: ubuntu-latest
 
-    steps:
-      - name: Start SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-
-      - name: Add server to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      - name: Deploy on EC2
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd /home/ubuntu/GreenGate
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d
-          EOF
+   steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        scrit: |
+         echo "Deploying GreenGate on EC2..."
+         cd /home/ubuntu/greengate
+         docker compose -f docker-compose.prod.yml pull
+         docker compose -f docker-compose.prod.yml up -d
+         docker image prune -f
+         echo "Deployment finished."
+         
 
       
