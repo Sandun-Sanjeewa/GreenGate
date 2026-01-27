@@ -29,7 +29,6 @@ services:
   # build:
   #  context: ./Client
   #  dockerfile: ../docker/prod/Dockerfile.client.prod
-
   image: sandunsanjeewa/greengate-client:latest
   container_name: greengate-client
   restart: always
