@@ -39,7 +39,6 @@ services:
    - server
 
  nginx: 
- 
   #image: greengate-client
   # image: nginx:alpine
   image: sandunsanjeewa/greengate-nginx:latest
