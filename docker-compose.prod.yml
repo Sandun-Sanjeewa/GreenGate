@@ -25,6 +25,7 @@ services:
    - greengate-network
   depends_on:
    - mongo
+   
  client:
   # build:
   #  context: ./Client
